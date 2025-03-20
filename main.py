@@ -14,7 +14,7 @@ sym_des = pd.read_csv("C:/Users/chaud/Desktop/PythonProject11/datasets/symtoms_d
 
 
 # load model===========================================
-svc = pickle.load(open('models\svc.pkl','rb'))
+svc = pickle.load(open('models/svc.pkl','rb'))
 
 
 #
