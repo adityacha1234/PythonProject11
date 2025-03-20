@@ -25,9 +25,13 @@ diseases_list = {15: 'Fungal infection', 4: 'Allergy', 16: 'GERD', 9: 'Chronic c
 # Model Prediction function
 def get_predicted_value(user_symptoms):
     input_vector = np.zeros(len(symptoms_dict))
-    for item in user_symptoms:
-        input_vector[symptoms_dict[item]] = 1
-    return diseases_list[svc.predict([input_vector])[0]]
+    try:
+        for item in user_symptoms:
+            input_vector[symptoms_dict[item]] = 1
+        return diseases_list[svc.predict([input_vector])[0]]
+    except KeyError as e:
+        return f"Invalid symptom entered: {e}"
+
 
 
 
@@ -40,7 +44,7 @@ def index():
     return render_template("index.html")
 
 # Define a route for the home page
-@app.route('/predict', methods=['GET', 'POST'])
+@app.route('/predict', methods=['POST'])
 def home():
     if request.method == 'POST':
         symptoms = request.form.get('symptoms')
@@ -53,8 +57,8 @@ def home():
             message = "Please either write symptoms or you have written misspelled symptoms"
             return render_template('index.html', predicted_disease=message)
         else :
-
-
+            symptoms=symptoms.lower()
+            symptoms=(symptoms.replace(" ","_"))
             user_symptoms = [s.strip() for s in symptoms.split(',')]
 
             user_symptoms = [symptom.strip("[]' ") for symptom in user_symptoms]
